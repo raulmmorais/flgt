@@ -19,12 +19,14 @@ public class Box2DTutorial extends Game {
     private MenuScreen menuScreen;
     private MainScreen mainScreen;
     private EndScreen endScreen;
+    private AppPreferences preferences;
 	
 	@Override
 	public void create () {
         Gdx.app.log("create", "call LoadScreen");
 	    loadingScreen = new LoadingScreen(this);
 	    setScreen(loadingScreen);
+	    preferences = new AppPreferences();
 	}
 
 	@Override
@@ -42,28 +44,32 @@ public class Box2DTutorial extends Game {
 	    switch (screen){
             case MENU:
                 if (menuScreen == null)
-                    Gdx.app.log("create", "call MenuScreen");
                     menuScreen = new MenuScreen(this);
+                Gdx.app.log("changeScreen", "call MenuScreen");
                 this.setScreen(menuScreen);
                 break;
             case PREFERENCES:
                 if (preferencesScreen == null)
-                    Gdx.app.log("create", "call PreferencesScreen");
                     preferencesScreen = new PreferencesScreen(this);
+                Gdx.app.log("changeScreen", "call PreferencesScreen");
                 this.setScreen(preferencesScreen);
                 break;
             case APPLICATION:
                 if (mainScreen == null)
-                    Gdx.app.log("create", "call MainScreen");
                     mainScreen = new MainScreen(this);
+                Gdx.app.log("changeScreen", "call MainScreen");
                 this.setScreen(mainScreen);
                 break;
             case ENDGAME:
                 if (endScreen == null)
-                    Gdx.app.log("create", "call EndScreen");
                     endScreen = new EndScreen(this);
+                Gdx.app.log("changeScreen", "call EndScreen");
                 this.setScreen(endScreen);
                 break;
         }
 	}
+
+    public AppPreferences getPreferences() {
+        return preferences;
+    }
 }
