@@ -11,26 +11,27 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.tutorial.game.Box2DTutorial;
-//https://www.gamedevelopment.blog/full-libgdx-game-tutorial-project-setup/
+
 public class MenuScreen implements Screen {
     private Box2DTutorial parent;
     private Stage stage;
+    private Skin skin;
 
     public MenuScreen (Box2DTutorial box2DTutorial){
         this.parent = box2DTutorial;
         stage = new Stage(new ScreenViewport());
-        Gdx.input.setInputProcessor(stage);
+        // temporary until we have asset manager in
+        skin = new Skin(Gdx.files.internal("skin/glassy-ui.json"));
     }
 
     @Override
     public void show() {
+        Gdx.input.setInputProcessor(stage);
         Table table = new Table();
         table.setFillParent(true);
         table.setDebug(true);
         stage.addActor(table);
 
-        // temporary until we have asset manager in
-        Skin skin = new Skin(Gdx.files.internal("skin/glassy-ui.json"));
 
         //Create buttons
         TextButton newGame = new TextButton("New Game", skin);

@@ -1,7 +1,6 @@
 package com.tutorial.game;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
 import com.tutorial.game.views.EndScreen;
 import com.tutorial.game.views.LoadingScreen;
 import com.tutorial.game.views.MainScreen;
@@ -23,10 +22,9 @@ public class Box2DTutorial extends Game {
 	
 	@Override
 	public void create () {
-        Gdx.app.log("create", "call LoadScreen");
 	    loadingScreen = new LoadingScreen(this);
+        preferences = new AppPreferences();
 	    setScreen(loadingScreen);
-	    preferences = new AppPreferences();
 	}
 
 	@Override
@@ -36,40 +34,31 @@ public class Box2DTutorial extends Game {
 	
 	@Override
 	public void dispose () {
-		//batch.dispose();
-		//img.dispose();
+
 	}
 
 	public void changeScreen (int screen){
 	    switch (screen){
             case MENU:
-                if (menuScreen == null)
-                    menuScreen = new MenuScreen(this);
-                Gdx.app.log("changeScreen", "call MenuScreen");
+                if(menuScreen == null) menuScreen = new MenuScreen(this);
                 this.setScreen(menuScreen);
                 break;
             case PREFERENCES:
-                if (preferencesScreen == null)
-                    preferencesScreen = new PreferencesScreen(this);
-                Gdx.app.log("changeScreen", "call PreferencesScreen");
+                if(preferencesScreen == null) preferencesScreen = new PreferencesScreen(this);
                 this.setScreen(preferencesScreen);
                 break;
             case APPLICATION:
-                if (mainScreen == null)
-                    mainScreen = new MainScreen(this);
-                Gdx.app.log("changeScreen", "call MainScreen");
+                if(mainScreen == null) mainScreen = new MainScreen(this);
                 this.setScreen(mainScreen);
                 break;
             case ENDGAME:
-                if (endScreen == null)
-                    endScreen = new EndScreen(this);
-                Gdx.app.log("changeScreen", "call EndScreen");
+                if(endScreen == null) endScreen = new EndScreen(this);
                 this.setScreen(endScreen);
                 break;
         }
 	}
 
     public AppPreferences getPreferences() {
-        return preferences;
+        return this.preferences;
     }
 }
