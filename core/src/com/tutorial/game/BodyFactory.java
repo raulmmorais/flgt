@@ -49,6 +49,11 @@ public class BodyFactory {
                 fixtureDef.friction = 0f;
                 fixtureDef.restitution = 1f;
                 break;
+            case 10:
+                fixtureDef.density = .5f;
+                fixtureDef.friction = 0f;
+                fixtureDef.restitution = 1.5f;
+                break;
             case STONE:
                 fixtureDef.density = 1f;
                 fixtureDef.friction = 0.9f;

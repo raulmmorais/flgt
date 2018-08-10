@@ -28,11 +28,19 @@ public class B2DModel {
         BodyFactory bodyFactory = BodyFactory.getInstance(world);
 
         bodyFactory.makeCirclePolyBody(2, 1,2, BodyFactory.RUBBER, BodyDef.BodyType.DynamicBody);
+        bodyFactory.makeCirclePolyBody(-3, 2,2, BodyFactory.RUBBER, BodyDef.BodyType.DynamicBody);
+        bodyFactory.makeCirclePolyBody(-6, 3,2, BodyFactory.RUBBER, BodyDef.BodyType.DynamicBody);
+        bodyFactory.makeCirclePolyBody(7, 4,2, BodyFactory.RUBBER, BodyDef.BodyType.DynamicBody);
+        bodyFactory.makeCirclePolyBody(8, 1,2, BodyFactory.RUBBER, BodyDef.BodyType.DynamicBody);
         bodyFactory.makeCirclePolyBody(4, 1,2, BodyFactory.STEEL, BodyDef.BodyType.DynamicBody);
         bodyFactory.makeCirclePolyBody(-4, 1,2, BodyFactory.STONE, BodyDef.BodyType.DynamicBody);
         bodyFactory.makeCirclePolyBody(-2, 1,2, BodyFactory.WOOD, BodyDef.BodyType.DynamicBody);
 
         bodyFactory.makeBoxPolyBody(5, 2, 1, 2, BodyFactory.RUBBER);
+        bodyFactory.makeBoxPolyBody(-5, 9, 0.1f, 2, BodyFactory.RUBBER);
+        bodyFactory.makeBoxPolyBody(-5, 10, 4, 0.4f, BodyFactory.RUBBER);
+
+        bodyFactory.makeBoxPolyBody(3, 10, 4, 0.4f, 10);
     }
 
     public void logicStep(float delta){
@@ -84,18 +92,24 @@ public class B2DModel {
 
         //this part it's to make tests
         Vector2[] vertices = new Vector2[4];
-        vertices[0] = new Vector2(-16, 0);
+        vertices[0] = new Vector2(-16, 0.8f);
         vertices[1] = new Vector2(-16, 20);
-        vertices[2] = new Vector2(-15, 20);
-        vertices[3] = new Vector2(-15, 0);
+        vertices[2] = new Vector2(-15.5f, 20);
+        vertices[3] = new Vector2(-15.5f, 0.8f);
         shape.set(vertices);
         bodys.createFixture(shape, 0f);
-        vertices[0] = new Vector2(15, 0);
-        vertices[1] = new Vector2(15, 20);
+        vertices[0] = new Vector2(15.5f, 0.8f);
+        vertices[1] = new Vector2(15.5f, 20);
         vertices[2] = new Vector2(16, 20);
-        vertices[3] = new Vector2(16, 0);
+        vertices[3] = new Vector2(16, 0.8f);
         shape.set(vertices);
-        bodys.createFixture(shape, 0f);
+        bodys.createFixture(shape, 05.f);
+        vertices[0] = new Vector2(-16, 21);
+        vertices[1] = new Vector2(16, 21);
+        vertices[2] = new Vector2(16, 20);
+        vertices[3] = new Vector2(-16, 20);
+        shape.set(vertices);
+        bodys.createFixture(shape, 05.f);
 
         //dispose shape
         shape.dispose();
