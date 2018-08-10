@@ -9,6 +9,8 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
+import javax.swing.BorderFactory;
+
 public class B2DModel {
     public World world;
     private Box2DDebugRenderer box2DDebugRenderer;
@@ -22,6 +24,15 @@ public class B2DModel {
         createFloor();
         createObject();
         createMovingObject();
+
+        BodyFactory bodyFactory = BodyFactory.getInstance(world);
+
+        bodyFactory.makeCirclePolyBody(2, 1,2, BodyFactory.RUBBER, BodyDef.BodyType.DynamicBody);
+        bodyFactory.makeCirclePolyBody(4, 1,2, BodyFactory.STEEL, BodyDef.BodyType.DynamicBody);
+        bodyFactory.makeCirclePolyBody(-4, 1,2, BodyFactory.STONE, BodyDef.BodyType.DynamicBody);
+        bodyFactory.makeCirclePolyBody(-2, 1,2, BodyFactory.WOOD, BodyDef.BodyType.DynamicBody);
+
+        bodyFactory.makeBoxPolyBody(5, 2, 1, 2, BodyFactory.RUBBER);
     }
 
     public void logicStep(float delta){
@@ -65,9 +76,25 @@ public class B2DModel {
         bodys = world.createBody(bodyDef);
         // set the shape (here we use a box 50 meters wide, 1 meter tall )
         PolygonShape shape = new PolygonShape();
+
         shape.setAsBox(50, 1);
         // create the physical object in our body)
         // without this our body would just be data in the world
+        bodys.createFixture(shape, 0f);
+
+        //this part it's to make tests
+        Vector2[] vertices = new Vector2[4];
+        vertices[0] = new Vector2(-16, 0);
+        vertices[1] = new Vector2(-16, 20);
+        vertices[2] = new Vector2(-15, 20);
+        vertices[3] = new Vector2(-15, 0);
+        shape.set(vertices);
+        bodys.createFixture(shape, 0f);
+        vertices[0] = new Vector2(15, 0);
+        vertices[1] = new Vector2(15, 20);
+        vertices[2] = new Vector2(16, 20);
+        vertices[3] = new Vector2(16, 0);
+        shape.set(vertices);
         bodys.createFixture(shape, 0f);
 
         //dispose shape
