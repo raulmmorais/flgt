@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
@@ -52,7 +53,7 @@ public class BodyFactory {
             case 10:
                 fixtureDef.density = .5f;
                 fixtureDef.friction = 0f;
-                fixtureDef.restitution = 1.5f;
+                fixtureDef.restitution = 2f;
                 break;
             case STONE:
                 fixtureDef.density = 1f;
@@ -155,6 +156,12 @@ public class BodyFactory {
         body.createFixture(fixtureDef);
         polygon.dispose();
 
+    }
+
+    public void makeAllFixturesSensors(Body bod){
+        for (Fixture fix: bod.getFixtureList()){
+            fix.setSensor(true);
+        }
     }
 
     private BodyDef getBodyDef(float posX, float posY, BodyDef.BodyType bodyType, boolean fixedRotation) {

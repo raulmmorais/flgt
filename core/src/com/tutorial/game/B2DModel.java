@@ -18,32 +18,48 @@ public class B2DModel {
     private Body bodyd;
     private Body bodys;
     private Body bodyk;
+    public boolean isSwimming = false;
+
+    private Body player;
 
     public B2DModel(){
         world = new World(new Vector2(0, -10f), true);
+        world.setContactListener(new B2dContactListener(this));
         createFloor();
-        createObject();
-        createMovingObject();
+        //createObject();
+        //createMovingObject();
 
         BodyFactory bodyFactory = BodyFactory.getInstance(world);
 
+        //Add a player
+        player = bodyFactory.makeBoxPolyBody(1, 1, 2, 2, BodyFactory.WOOD);
+
+        //add some watter
+        Body watter = bodyFactory.makeBoxPolyBody(1, -6, 40, 6, BodyFactory.RUBBER, BodyDef.BodyType.StaticBody);
+
+        //make the watter a sensor
+        bodyFactory.makeAllFixturesSensors(watter);
+
+        watter.setUserData("IAMTHESEA");
+
+        /*
         bodyFactory.makeCirclePolyBody(2, 1,2, BodyFactory.RUBBER, BodyDef.BodyType.DynamicBody);
-        bodyFactory.makeCirclePolyBody(-3, 2,2, BodyFactory.RUBBER, BodyDef.BodyType.DynamicBody);
-        bodyFactory.makeCirclePolyBody(-6, 3,2, BodyFactory.RUBBER, BodyDef.BodyType.DynamicBody);
-        bodyFactory.makeCirclePolyBody(7, 4,2, BodyFactory.RUBBER, BodyDef.BodyType.DynamicBody);
-        bodyFactory.makeCirclePolyBody(8, 1,2, BodyFactory.RUBBER, BodyDef.BodyType.DynamicBody);
-        bodyFactory.makeCirclePolyBody(4, 1,2, BodyFactory.STEEL, BodyDef.BodyType.DynamicBody);
-        bodyFactory.makeCirclePolyBody(-4, 1,2, BodyFactory.STONE, BodyDef.BodyType.DynamicBody);
-        bodyFactory.makeCirclePolyBody(-2, 1,2, BodyFactory.WOOD, BodyDef.BodyType.DynamicBody);
+        //bodyFactory.makeCirclePolyBody(-3, 2,2, BodyFactory.RUBBER, BodyDef.BodyType.DynamicBody);
+        bodyFactory.makeCirclePolyBody(4, 1,1.8f, BodyFactory.STEEL, BodyDef.BodyType.DynamicBody);
+        bodyFactory.makeCirclePolyBody(-4, 1,3, BodyFactory.STONE, BodyDef.BodyType.DynamicBody);
+        bodyFactory.makeCirclePolyBody(-2, 1,2.2f, BodyFactory.WOOD, BodyDef.BodyType.DynamicBody);
+*/
+        //bodyFactory.makeBoxPolyBody(5, 2, 1, 2, BodyFactory.RUBBER);
+        //bodyFactory.makeBoxPolyBody(-5, 9, 0.1f, 2, BodyFactory.RUBBER);
+        //bodyFactory.makeBoxPolyBody(-5, 10, 4, 0.4f, BodyFactory.RUBBER);
 
-        bodyFactory.makeBoxPolyBody(5, 2, 1, 2, BodyFactory.RUBBER);
-        bodyFactory.makeBoxPolyBody(-5, 9, 0.1f, 2, BodyFactory.RUBBER);
-        bodyFactory.makeBoxPolyBody(-5, 10, 4, 0.4f, BodyFactory.RUBBER);
-
-        bodyFactory.makeBoxPolyBody(3, 10, 4, 0.4f, 10);
+        //bodyFactory.makeBoxPolyBody(3, 10, 4, 0.2f, 10);
     }
 
     public void logicStep(float delta){
+        if (isSwimming){
+            player.applyForceToCenter(0, 100,true);
+        }
         world.step(delta, 3, 3);
     }
 
