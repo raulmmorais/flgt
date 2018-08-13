@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.tutorial.game.B2DModel;
 import com.tutorial.game.Box2DTutorial;
+import com.tutorial.game.controller.KeyboardController;
 
 public class MainScreen implements Screen {
     private Box2DTutorial parent;
@@ -14,18 +15,20 @@ public class MainScreen implements Screen {
     private B2DModel model;
     private OrthographicCamera cam;
     private Box2DDebugRenderer debugRenderer;
+    private KeyboardController controller;
 
     public MainScreen (Box2DTutorial box2DTutorial){
         this.parent = box2DTutorial;
-
-        model = new B2DModel();
         cam = new OrthographicCamera(32, 24);
+        controller = new KeyboardController();
         debugRenderer = new Box2DDebugRenderer(true, true, true, true, true, true);
+
+        model = new B2DModel(controller, cam);
     }
 
     @Override
     public void show() {
-
+        Gdx.input.setInputProcessor(controller);
     }
 
     @Override
