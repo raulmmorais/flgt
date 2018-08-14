@@ -18,24 +18,25 @@ public class B2dContactListener implements ContactListener {
 
     @Override
     public void beginContact(Contact contact) {
-        Gdx.app.log("contact", "");
+        Gdx.app.log("contact", "contact");
         Fixture fa = contact.getFixtureA();
         Fixture fb = contact.getFixtureB();
+        Gdx.app.log("contact", fa.getBody().getType() + "has hit" + fb.getBody().getType());
 
         if(fa.getBody().getUserData() == "IAMTHESEA"){
-            Gdx.app.log("contact", "swimming");
             parent.isSwimming = true;
             return;
         }else if(fb.getBody().getUserData() == "IAMTHESEA"){
-            Gdx.app.log("contact", "swimming");
             parent.isSwimming = true;
             return;
         }
 
         if (fa.getBody().getType() == BodyDef.BodyType.StaticBody){
-            //shootUpInTheAir(fa, fb);
+            this.shootUpInTheAir(fa, fb);
         }else if (fb.getBody().getType() == BodyDef.BodyType.StaticBody){
-           // shootUpInTheAir(fb, fa);
+            this.shootUpInTheAir(fb, fa);
+        }else {
+            //nothing to do
         }
     }
 
@@ -47,16 +48,14 @@ public class B2dContactListener implements ContactListener {
 
     @Override
     public void endContact(Contact contact) {
-        Gdx.app.log("contact", "");
+        Gdx.app.log("contact", "endContact");
         Fixture fa = contact.getFixtureA();
         Fixture fb = contact.getFixtureB();
 
         if(fa.getBody().getUserData() == "IAMTHESEA"){
-            Gdx.app.log("contact", "no swimming");
             parent.isSwimming = false;
             return;
         }else if(fb.getBody().getUserData() == "IAMTHESEA"){
-            Gdx.app.log("contact", " no swimming");
             parent.isSwimming = false;
             return;
         }
