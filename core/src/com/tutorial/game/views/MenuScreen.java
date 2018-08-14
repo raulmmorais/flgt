@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.tutorial.game.Box2DTutorial;
+import com.tutorial.game.loader.B2dAssetManager;
 
 public class MenuScreen implements Screen {
     private Box2DTutorial parent;
@@ -20,8 +21,12 @@ public class MenuScreen implements Screen {
     public MenuScreen (Box2DTutorial box2DTutorial){
         this.parent = box2DTutorial;
         stage = new Stage(new ScreenViewport());
-        // temporary until we have asset manager in
-        skin = new Skin(Gdx.files.internal("skin/glassy-ui.json"));
+
+        parent.assMan.queueAddSkin();
+        parent.assMan.manager.finishLoading();
+        skin = parent.assMan.manager.get(B2dAssetManager.SKIN);
+
+        //skin = new Skin(Gdx.files.internal("skin/glassy-ui.json"));
     }
 
     @Override

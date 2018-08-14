@@ -1,6 +1,8 @@
 package com.tutorial.game;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.audio.Music;
+import com.tutorial.game.loader.B2dAssetManager;
 import com.tutorial.game.views.EndScreen;
 import com.tutorial.game.views.LoadingScreen;
 import com.tutorial.game.views.MainScreen;
@@ -19,13 +21,23 @@ public class Box2DTutorial extends Game {
     private MainScreen mainScreen;
     private EndScreen endScreen;
     private AppPreferences preferences;
+    private Music playingSong;
+    public B2dAssetManager assMan = new B2dAssetManager();
 	
 	@Override
 	public void create () {
 	    loadingScreen = new LoadingScreen(this);
         preferences = new AppPreferences();
 	    setScreen(loadingScreen);
-	}
+
+	    assMan.queueAddMusic();
+	    assMan.manager.finishLoading();
+
+        playingSong = assMan.manager.get(B2dAssetManager.TRACK_07_MUSIC, Music.class);
+
+        playingSong.setVolume(0.5f);
+        playingSong.play();
+    }
 
 	@Override
 	public void render () {
@@ -34,7 +46,8 @@ public class Box2DTutorial extends Game {
 	
 	@Override
 	public void dispose () {
-
+	    playingSong.dispose();
+	    assMan.manager.dispose();
 	}
 
 	public void changeScreen (int screen){

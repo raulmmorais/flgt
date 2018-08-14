@@ -42,6 +42,7 @@ public class B2dContactListener implements ContactListener {
     private void shootUpInTheAir(Fixture staticFixture, Fixture otherFixture){
         Gdx.app.log("contact", "Adding Force");
         otherFixture.getBody().applyForceToCenter(new Vector2(-1000, -1000), true);
+        parent.playSound(B2DModel.BOING_SOUND);
     }
 
     @Override

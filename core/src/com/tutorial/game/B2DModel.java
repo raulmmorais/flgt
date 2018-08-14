@@ -1,6 +1,7 @@
 package com.tutorial.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -11,8 +12,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.tutorial.game.controller.KeyboardController;
-
-import javax.swing.BorderFactory;
+import com.tutorial.game.loader.B2dAssetManager;
 
 public class B2DModel {
     public World world;
@@ -23,20 +23,33 @@ public class B2DModel {
     private Body bodyk;
     public boolean isSwimming = false;
     private KeyboardController controller;
+    private B2dAssetManager assMan;
+    private Sound ping;
+    private Sound boing;
+    public Body player;
 
-    private Body player;
+    public final static int BOING_SOUND = 0;
+    public final static int PING_SOUND = 1;
 
-    public B2DModel(KeyboardController controller, OrthographicCamera cam){
+    public B2DModel(KeyboardController controller, OrthographicCamera cam, B2dAssetManager assetManager){
         this.controller = controller;
         this.camera = cam;
+        this.assMan = assetManager;
         world = new World(new Vector2(0, -10f), true);
         world.setContactListener(new B2dContactListener(this));
         createFloor();
         //createObject();
         //createMovingObject();
+
+        assMan.queueAddSounds();
+        assMan.manager.finishLoading();
+
+        ping = assMan.manager.get(B2dAssetManager.PING_SOUND, Sound.class);
+        boing = assMan.manager.get(B2dAssetManager.BOING_SOUND, Sound.class);
+
         BodyFactory bodyFactory = BodyFactory.getInstance(world);
         //Add a player
-        player = bodyFactory.makeBoxPolyBody(1, 1, 2, 2, BodyFactory.WOOD);
+        player = bodyFactory.makeBoxPolyBody(1, 1, 2, 2, BodyFactory.RUBBER);
 
         //add some watter
         Body watter = bodyFactory.makeBoxPolyBody(1, -6, 40, 6, BodyFactory.RUBBER, BodyDef.BodyType.StaticBody);
@@ -86,6 +99,19 @@ public class B2DModel {
             return true;
         }
         return false;
+    }
+
+    public void playSound(int sound){
+        switch (sound){
+            case BOING_SOUND:
+                boing.play();
+                break;
+            case PING_SOUND:
+                ping.play();
+                break;
+            default:
+                ping.play();
+        }
     }
 
     private void createObject(){
