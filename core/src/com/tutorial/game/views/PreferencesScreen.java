@@ -100,19 +100,19 @@ public class PreferencesScreen implements Screen {
         soundOnOfLabel = new Label("Sound", skin);
 
         table.add(titleLabel).colspan(2).expandX();
-        table.row();
+        table.row().pad(10,0,0,10);;
         table.add(volumeMusicLabel);
         table.add(volumeMusicSlider);
-        table.row();
+        table.row().pad(10,0,0,10);;
         table.add(volumeSoundLabel);
         table.add(volumeSoundSlider);
-        table.row();
+        table.row().pad(10,0,0,10);;
         table.add(musicOnOffLabel);
         table.add(musicCheckbox);
-        table.row();
+        table.row().pad(10,0,0,10);;
         table.add(soundOnOfLabel);
         table.add(soundEffectsCheckbox);
-        table.row();
+        table.row().pad(10,0,0,10);;
         table.add(backButton).colspan(2);
 
     }
@@ -122,13 +122,13 @@ public class PreferencesScreen implements Screen {
     public void render(float delta) {
         Gdx.gl.glClearColor(0f, 0f, 0f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        stage.act(Math.min(delta, 1/30f));
+        stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
         stage.draw();
     }
 
     @Override
     public void resize(int width, int height) {
-
+        stage.getViewport().update(width, height, true);
     }
 
     @Override

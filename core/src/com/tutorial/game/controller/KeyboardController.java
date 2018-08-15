@@ -1,17 +1,15 @@
 package com.tutorial.game.controller;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
 
 public class KeyboardController implements InputProcessor{
-
     public boolean left,right,up,down;
-    public boolean dragLeft,dragRight;
     public boolean isMouse1Down,isMouse2Down,isMouse3Down;
     public boolean isDragged;
     public Vector2 mouseLocation = new Vector2(0, 0);
-    private int currentPointX = 0;
 
     @Override
     public boolean keyDown(int keycode) {
@@ -39,11 +37,31 @@ public class KeyboardController implements InputProcessor{
 
     @Override
     public boolean keyUp(int keycode) {
-        return false;
+        boolean keyProcessed = false;
+        switch (keycode){
+            case Input.Keys.LEFT:
+                left = false;
+                keyProcessed = true;
+                break;
+            case Input.Keys.RIGHT:
+                right = false;
+                keyProcessed = true;
+                break;
+            case Input.Keys.UP:
+                up = false;
+                keyProcessed = true;
+                break;
+            case Input.Keys.DOWN:
+                down = false;
+                keyProcessed = true;
+                break;
+        }
+        return keyProcessed;
     }
 
     @Override
     public boolean keyTyped(char character) {
+        Gdx.app.log("keyTyped", String.valueOf(character));
         return false;
     }
 
@@ -81,19 +99,6 @@ public class KeyboardController implements InputProcessor{
         isDragged = true;
         mouseLocation.x = screenX;
         mouseLocation.y = screenY;
-        /*boolean keyProcessed = false;
-        if (currentPointX !=0){
-            if (currentPointX > screenX){
-                dragLeft = true;
-                keyProcessed = true;
-                Gdx.app.log("touchDragged", "Dragleft");
-            }else{
-                dragRight = true;
-                keyProcessed = true;
-                Gdx.app.log("touchDragged", "DragRight");
-            }
-        }
-        currentPointX = screenX;*/
         return false;
     }
 

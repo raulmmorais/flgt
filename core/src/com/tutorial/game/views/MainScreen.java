@@ -14,28 +14,28 @@ import com.tutorial.game.loader.B2dAssetManager;
 
 public class MainScreen implements Screen {
     private Box2DTutorial parent;
-
     private B2DModel model;
-    private OrthographicCamera cam;
     private Box2DDebugRenderer debugRenderer;
+    private OrthographicCamera cam;
     private KeyboardController controller;
     private Texture playerTex;
     private SpriteBatch sb;
+
     public MainScreen (Box2DTutorial box2DTutorial){
         this.parent = box2DTutorial;
         cam = new OrthographicCamera(32, 24);
         controller = new KeyboardController();
+        model = new B2DModel(controller, cam, parent.assMan);
         debugRenderer = new Box2DDebugRenderer(true, true, true, true, true, true);
+
+        sb = new SpriteBatch();
+        sb.setProjectionMatrix(cam.combined);
 
         parent.assMan.queueAddImages();
         parent.assMan.manager.finishLoading();
 
         playerTex = parent.assMan.manager.get(B2dAssetManager.PLAYER_IMAGE);
 
-        model = new B2DModel(controller, cam, parent.assMan);
-
-        sb = new SpriteBatch();
-        sb.setProjectionMatrix(cam.combined);
     }
 
     @Override
@@ -52,6 +52,8 @@ public class MainScreen implements Screen {
         sb.begin();
         sb.draw(playerTex, model.player.getPosition().x-1, model.player.getPosition().y-1, 2, 2);
         sb.end();
+
+        debugRenderer.render(model.world, cam.combined);
     }
 
     @Override
