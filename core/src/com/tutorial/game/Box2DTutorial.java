@@ -39,6 +39,7 @@ public class Box2DTutorial extends Game {
         playingSong = assMan.manager.get(B2dAssetManager.TRACK_07_MUSIC, Music.class);
 
         playingSong.setVolume(0.5f);
+        playingSong.setLooping(true);
         playingSong.play();
     }
 
