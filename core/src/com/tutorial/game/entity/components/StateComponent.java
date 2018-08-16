@@ -11,9 +11,10 @@ public class StateComponent implements Component {
 
     private int state = 0;
     public float time = 0.0f;
+    public boolean isLooping = false;
 
     public void set(int newState){
-        state = state;
+        state = newState;
         time = 0.0f;
     }
 
