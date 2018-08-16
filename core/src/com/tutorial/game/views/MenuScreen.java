@@ -3,28 +3,35 @@ package com.tutorial.game.views;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.tutorial.game.Box2DTutorial;
 import com.tutorial.game.loader.B2dAssetManager;
 
 public class MenuScreen implements Screen {
+    private final TextureAtlas atlas;
+    private final AtlasRegion background;
     private Box2DTutorial parent;
     private Stage stage;
     private Skin skin;
 
     public MenuScreen (Box2DTutorial box2DTutorial){
         this.parent = box2DTutorial;
-        stage = new Stage(new ScreenViewport());
+        stage = new Stage(new FitViewport(800, 420));
 
         parent.assMan.queueAddSkin();
         parent.assMan.manager.finishLoading();
         skin = parent.assMan.manager.get(B2dAssetManager.SKIN);
+        atlas = parent.assMan.manager.get(B2dAssetManager.LOAD_IMAGES, TextureAtlas.class);
+        background = atlas.findRegion("flamebackground");
 
         //skin = new Skin(Gdx.files.internal("skin/glassy-ui.json"));
     }
@@ -34,7 +41,8 @@ public class MenuScreen implements Screen {
         Gdx.input.setInputProcessor(stage);
         Table table = new Table();
         table.setFillParent(true);
-        table.setDebug(true);
+        table.setDebug(false);
+        table.setBackground(new TiledDrawable(background));
         stage.addActor(table);
 
 

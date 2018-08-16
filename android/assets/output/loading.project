@@ -1,7 +1,7 @@
 name=images
 filename=loading
 input=..\input\loading
-output=
+output=..\..\..\Android\assets\output
 
 alias=true
 alphaThreshold=0

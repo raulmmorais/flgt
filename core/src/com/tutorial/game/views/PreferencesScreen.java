@@ -3,6 +3,8 @@ package com.tutorial.game.views;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
@@ -14,10 +16,15 @@ import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.tutorial.game.Box2DTutorial;
+import com.tutorial.game.loader.B2dAssetManager;
 
 public class PreferencesScreen implements Screen {
+    private final Skin skin;
+    private final TextureAtlas atlas;
+    private final AtlasRegion background;
     private Box2DTutorial parent;
     private Stage stage;
 
@@ -30,6 +37,9 @@ public class PreferencesScreen implements Screen {
     public PreferencesScreen (Box2DTutorial box2DTutorial){
         this.parent = box2DTutorial;
         stage = new Stage(new FitViewport(600, 336));
+        skin = parent.assMan.manager.get(B2dAssetManager.SKIN);
+        atlas = parent.assMan.manager.get(B2dAssetManager.LOAD_IMAGES, TextureAtlas.class);
+        background = atlas.findRegion("flamebackground");
     }
 
     @Override
@@ -38,10 +48,9 @@ public class PreferencesScreen implements Screen {
         Gdx.input.setInputProcessor(stage);
         Table table = new Table();
         table.setFillParent(true);
-        table.setDebug(true);
+        table.setDebug(false);
+        table.setBackground(new TiledDrawable(background));
         stage.addActor(table);
-
-        Skin skin = new Skin(Gdx.files.internal("skin/glassy-ui.json"));
 
         final Slider volumeMusicSlider = new Slider(0f, 1f, 0.1f, false, skin);
         volumeMusicSlider.setValue(parent.getPreferences().getMusicVolume());
