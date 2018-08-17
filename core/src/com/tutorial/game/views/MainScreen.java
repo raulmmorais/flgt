@@ -8,13 +8,19 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.World;
 import com.tutorial.game.B2DModel;
+import com.tutorial.game.B2dContactListener;
+import com.tutorial.game.BodyFactory;
 import com.tutorial.game.Box2DTutorial;
 import com.tutorial.game.controller.KeyboardController;
 import com.tutorial.game.loader.B2dAssetManager;
 
 public class MainScreen implements Screen {
+    private final World world;
+    private final BodyFactory bodyFactory;
     private Box2DTutorial parent;
     private B2DModel model;
     private Box2DDebugRenderer debugRenderer;
@@ -26,15 +32,24 @@ public class MainScreen implements Screen {
 
     public MainScreen (Box2DTutorial box2DTutorial){
         this.parent = box2DTutorial;
-        cam = new OrthographicCamera(32, 25);
         controller = new KeyboardController();
+        world = new World(new Vector2(0, -10f), true);
+        //world.setContactListener(new B2dContactListener());
+        bodyFactory = BodyFactory.getInstance(world);
+
+        parent.assMan.queueAddSounds();
+        parent.assMan.manager.finishLoading();
+        atlas = parent.assMan.manager.get(B2dAssetManager.GAME_IMAGES, TextureAtlas.class);
+
+
+        cam = new OrthographicCamera(32, 25);
         model = new B2DModel(controller, cam, parent.assMan);
         debugRenderer = new Box2DDebugRenderer(true, true, true, true, true, true);
 
         sb = new SpriteBatch();
         sb.setProjectionMatrix(cam.combined);
 
-        atlas = parent.assMan.manager.get(B2dAssetManager.GAME_IMAGES, TextureAtlas.class);
+
         playerTex = atlas.findRegion("player");
     }
 
