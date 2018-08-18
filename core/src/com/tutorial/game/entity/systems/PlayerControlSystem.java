@@ -54,7 +54,7 @@ public class PlayerControlSystem extends IteratingSystem {
 
         if (controller.up &&
                 (state.get() == StateComponent.STATE_NORMAL || state.get() == StateComponent.STATE_MOVING)){
-                    b2Body.body.applyLinearImpulse(0, 75f, b2Body.body.getWorldCenter().x, b2Body.body.getWorldCenter().y, true);
+                    b2Body.body.applyLinearImpulse(0, 15f, b2Body.body.getWorldCenter().x, b2Body.body.getWorldCenter().y, true);
                     state.set(StateComponent.STATE_JUMPING);
 
         }
