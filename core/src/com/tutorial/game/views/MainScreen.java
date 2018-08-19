@@ -36,9 +36,9 @@ public class MainScreen implements Screen {
         parent = box2dTutorial;
         parent.assMan.queueAddSounds();
         parent.assMan.manager.finishLoading();
-        atlas = parent.assMan.manager.get("images/game.atlas", TextureAtlas.class);
-        ping = parent.assMan.manager.get("sounds/ping.wav",Sound.class);
-        boing = parent.assMan.manager.get("sounds/boing.wav",Sound.class);
+        atlas = parent.assMan.manager.get(B2dAssetManager.GAME_IMAGES, TextureAtlas.class);
+        ping = parent.assMan.manager.get(B2dAssetManager.PING_SOUND,Sound.class);
+        boing = parent.assMan.manager.get(B2dAssetManager.BOING_SOUND,Sound.class);
         controller = new KeyboardController();
         engine = new PooledEngine();
         lvlFactory = new LevelFactory(engine,atlas.findRegion("player"));
