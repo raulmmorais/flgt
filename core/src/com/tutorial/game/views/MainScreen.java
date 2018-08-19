@@ -1,6 +1,5 @@
 package com.tutorial.game.views;
 
-import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -9,21 +8,9 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.World;
-import com.tutorial.game.B2dContactListener;
-import com.tutorial.game.BodyFactory;
 import com.tutorial.game.Box2DTutorial;
 import com.tutorial.game.LevelFactory;
 import com.tutorial.game.controller.KeyboardController;
-import com.tutorial.game.entity.components.B2dBodyComponent;
-import com.tutorial.game.entity.components.CollisionComponent;
-import com.tutorial.game.entity.components.PlayerComponent;
-import com.tutorial.game.entity.components.StateComponent;
-import com.tutorial.game.entity.components.TextureComponent;
-import com.tutorial.game.entity.components.TransformComponent;
-import com.tutorial.game.entity.components.TypeComponent;
 import com.tutorial.game.entity.systems.AnimationSystem;
 import com.tutorial.game.entity.systems.CollisionSystem;
 import com.tutorial.game.entity.systems.LevelGenerationSystem;
@@ -38,26 +25,26 @@ public class MainScreen implements Screen {
     private OrthographicCamera cam;
     private KeyboardController controller;
     private SpriteBatch sb;
-    private final PooledEngine engine;
+    private PooledEngine engine;
     private LevelFactory lvlFactory;
 
-    private final Sound ping;
-    private final Sound boing;
+    private Sound ping;
+    private Sound boing;
     private TextureAtlas atlas;
 
-    public MainScreen (Box2DTutorial box2DTutorial){
-        this.parent = box2DTutorial;
+    public MainScreen (Box2DTutorial box2dTutorial){
+        parent = box2dTutorial;
         parent.assMan.queueAddSounds();
         parent.assMan.manager.finishLoading();
-        atlas = parent.assMan.manager.get(B2dAssetManager.GAME_IMAGES, TextureAtlas.class);
-        ping = parent.assMan.manager.get(B2dAssetManager.PING_SOUND, Sound.class);
-        boing = parent.assMan.manager.get(B2dAssetManager.BOING_SOUND, Sound.class);
+        atlas = parent.assMan.manager.get("images/game.atlas", TextureAtlas.class);
+        ping = parent.assMan.manager.get("sounds/ping.wav",Sound.class);
+        boing = parent.assMan.manager.get("sounds/boing.wav",Sound.class);
         controller = new KeyboardController();
         engine = new PooledEngine();
-        lvlFactory = new LevelFactory(engine, atlas.findRegion("player"));
+        lvlFactory = new LevelFactory(engine,atlas.findRegion("player"));
+
 
         sb = new SpriteBatch();
-        //create a rendering system
         RenderingSystem renderingSystem = new RenderingSystem(sb);
         cam = renderingSystem.getCamera();
         sb.setProjectionMatrix(cam.combined);
@@ -69,9 +56,10 @@ public class MainScreen implements Screen {
         engine.addSystem(new CollisionSystem());
         engine.addSystem(new PlayerControlSystem(controller));
 
+
         engine.addSystem(new LevelGenerationSystem(lvlFactory));
 
-        lvlFactory.createPlayer(atlas.findRegion("player"), cam);
+        lvlFactory.createPlayer(atlas.findRegion("player"),cam);
         lvlFactory.createFloor(atlas.findRegion("player"));
     }
 
@@ -82,7 +70,7 @@ public class MainScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClearColor(0f, 0f, 0f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         engine.update(delta);

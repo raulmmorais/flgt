@@ -98,7 +98,7 @@ public class LevelFactory {
         StateComponent stateCom = engine.createComponent(StateComponent.class);
 
         player.cam = cam;
-        b2dbody.body = bodyFactory.makeCirclePolyBody(10,1,1, BodyFactory.STONE, BodyType.DynamicBody,true);
+        b2dbody.body = bodyFactory.makeCirclePolyBody(10,1,1, BodyFactory.RUBBER, BodyType.DynamicBody,true);
         // set object position (x,y,z) z used to define draw order 0 first drawn
         position.position.set(10,1,0);
         texture.region = tex;

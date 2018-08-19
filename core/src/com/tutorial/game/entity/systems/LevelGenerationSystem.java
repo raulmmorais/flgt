@@ -10,19 +10,20 @@ import com.tutorial.game.entity.components.PlayerComponent;
 import com.tutorial.game.entity.components.TransformComponent;
 
 public class LevelGenerationSystem extends IteratingSystem {
-    private ComponentMapper<TransformComponent>tm;
+    // get transform component so we can check players height
+    private ComponentMapper<TransformComponent> tm = ComponentMapper.getFor(TransformComponent.class);
     private LevelFactory lf;
-    public LevelGenerationSystem(LevelFactory lvlFactory) {
+
+    public LevelGenerationSystem(LevelFactory lvlFactory){
         super(Family.all(PlayerComponent.class).get());
         lf = lvlFactory;
-        tm = ComponentMapper.getFor(TransformComponent.class);
     }
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
         TransformComponent trans = tm.get(entity);
-        int currentPosition = (int) trans.position.y;
-        if ((currentPosition + 7) > lf.currentLevel){
+        int currentPosition = (int) trans.position.y ;
+        if((currentPosition + 7) > lf.currentLevel){
             lf.generateLevel(currentPosition + 7);
         }
     }
