@@ -43,7 +43,7 @@ public class DFUtils {
      * @param r red value
      * @param g green value
      * @param b blue value
-     * @return
+     * @return rgb string in hex
      */
     public static String rgbToString(float r, float g, float b){
         String rs = Integer.toHexString((int)r*256);
@@ -57,7 +57,7 @@ public class DFUtils {
      * @return a random name
      */
     public static String generateRandomName(){
-        String name = "";
+        String name;
         if (fnames == null){
             FileHandle fnfile = Gdx.files.internal("fname.txt");
             fnames = fnfile.readString().split("\n");
@@ -76,7 +76,7 @@ public class DFUtils {
 
     /**
      * Quick access to console logging
-     * @param o
+     * @param o object to log
      */
     public static void log(Object o){
         Gdx.app.log(o.getClass().getName(), o.toString());
