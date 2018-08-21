@@ -30,15 +30,28 @@ public class CollisionSystem extends IteratingSystem {
                 switch (type.type){
                     case TypeComponent.ENEMY:
                         Gdx.app.log("Collide", "player hit enemy");
+                        PlayerComponent pl = pm.get(entity);
+                        pl.isDead = true;
+                        int score = (int) pl.cam.position.y;
+                        Gdx.app.log("Score", String.valueOf(score));
                         break;
                     case TypeComponent.SCENERY:
                         Gdx.app.log("Collide", "player hit scenery");
+                        pm.get(entity).onPlatform = true;
+                        break;
+                    case TypeComponent.SPRING:
+                        Gdx.app.log("Collide", "player hit spring: bounce up");
+                        pm.get(entity).onSpring = true;
                         break;
                     case TypeComponent.OTHER:
                         Gdx.app.log("Collide", "player hit other");
                         break;
+                    default:
+                        Gdx.app.log("Collide", "No matching type found");
                 }
                 cc.collisionEntity = null;
+            }else {
+                Gdx.app.log("Collide", "type == null");
             }
         }
     }
