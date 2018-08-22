@@ -31,12 +31,6 @@ public class PlayerControlSystem extends IteratingSystem {
         StateComponent state = sm.get(entity);
         PlayerComponent player = pm.get(entity);
 
-        if (player.onSpring){
-            b2body.body.applyLinearImpulse(0, 175f, b2body.body.getWorldCenter().x,b2body.body.getWorldCenter().y, true);
-            state.set(StateComponent.STATE_JUMPING);
-            player.onSpring = false;
-        }
-
         if (b2body.body.getLinearVelocity().y < 0){
             state.set(StateComponent.STATE_FALLING);
         }
@@ -49,11 +43,17 @@ public class PlayerControlSystem extends IteratingSystem {
             }
         }
 
+        if (player.onSpring){
+            b2body.body.applyLinearImpulse(0, 175f, b2body.body.getWorldCenter().x,b2body.body.getWorldCenter().y, true);
+            state.set(StateComponent.STATE_JUMPING);
+            player.onSpring = false;
+        }
+
         if (controller.left){
-            b2body.body.setLinearVelocity(MathUtils.lerp(b2body.body.getLinearVelocity().x, -5f, 0.2f), b2body.body.getLinearVelocity().y);
+            b2body.body.setLinearVelocity(MathUtils.lerp(b2body.body.getLinearVelocity().x, -7f, 0.2f), b2body.body.getLinearVelocity().y);
         }
         if (controller.right){
-            b2body.body.setLinearVelocity(MathUtils.lerp(b2body.body.getLinearVelocity().x, 5f, 0.2f), b2body.body.getLinearVelocity().y);
+            b2body.body.setLinearVelocity(MathUtils.lerp(b2body.body.getLinearVelocity().x, 7f, 0.2f), b2body.body.getLinearVelocity().y);
         }
         if (!controller.left && !controller.right){
             b2body.body.setLinearVelocity(MathUtils.lerp(b2body.body.getLinearVelocity().x, 0f, 0.1f), b2body.body.getLinearVelocity().y);

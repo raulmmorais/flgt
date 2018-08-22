@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 
 public class PlayerComponent implements Component {
     public OrthographicCamera cam = null;
-    public boolean isDead = false;
     public boolean onPlatform = false;
     public boolean onSpring = false;
+    public boolean isDead = false;
 }

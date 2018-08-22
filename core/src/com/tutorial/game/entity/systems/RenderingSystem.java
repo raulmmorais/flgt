@@ -58,6 +58,8 @@ public class RenderingSystem extends SortedIteratingSystem {
 
         this.batch = batch;
 
+        comparator = new ZComparator();
+
         cam = new OrthographicCamera(FRUSTUM_WIDTH, FRUSTUM_HEIGHT);
         cam.position.set(FRUSTUM_WIDTH / 2f, FRUSTUM_HEIGHT / 2f, 0f);
     }

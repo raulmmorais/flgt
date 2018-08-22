@@ -21,7 +21,7 @@ public class DFUtils {
      * @return The RGBA value
      */
     public static Color hsvToRgba(float hue, float saturation, float value, float alpha){
-        int h = (int)hue * 6;
+        int h = (int) (hue * 6);
         float f = hue * 6 - h;
         float p = value * (1 - saturation);
         float q = value * (1 - f * saturation);
@@ -43,7 +43,7 @@ public class DFUtils {
      * @param r red value
      * @param g green value
      * @param b blue value
-     * @return rgb string in hex
+     * @return
      */
     public static String rgbToString(float r, float g, float b){
         String rs = Integer.toHexString((int)r*256);
@@ -56,8 +56,8 @@ public class DFUtils {
      * Generate a random name using fname and lname files in assets
      * @return a random name
      */
-    public static String generateRandomName(){
-        String name;
+    /*public static String generateRandomName(){
+        String name = "";
         if (fnames == null){
             FileHandle fnfile = Gdx.files.internal("fname.txt");
             fnames = fnfile.readString().split("\n");
@@ -72,11 +72,11 @@ public class DFUtils {
         name += "_" + lnames[lni].trim();
 
         return name;
-    }
+    }*/
 
     /**
      * Quick access to console logging
-     * @param o object to log
+     * @param o
      */
     public static void log(Object o){
         Gdx.app.log(o.getClass().getName(), o.toString());
