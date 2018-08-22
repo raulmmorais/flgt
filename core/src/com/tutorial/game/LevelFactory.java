@@ -2,6 +2,7 @@ package com.tutorial.game;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -50,13 +51,15 @@ public class LevelFactory {
             float noise8 = (float)sim.getNoise(1, currentLevel, 3000);
             if(noise1 > 0.2f){
                 createPlatform(noise2 * 25 +2 ,currentLevel * 2);
-                if (noise5 > 0.5f){
+                if (noise5 > 0.2f){
+                    Gdx.app.log("spring", "created");
                     createBouncyPlatform(noise2 * 25 + 2 ,currentLevel * 2);
                 }
             }
             if(noise3 > 0.2f){
                 createPlatform(noise4 * 25 +2, currentLevel * 2);
-                if (noise6 > 0.4f){
+                if (noise6 > 0.2f){
+                    Gdx.app.log("spring", "created");
                     createBouncyPlatform(noise4 * 25 + 2 ,currentLevel * 2);
                 }
             }
@@ -134,7 +137,7 @@ public class LevelFactory {
         StateComponent stateCom = engine.createComponent(StateComponent.class);
 
         player.cam = cam;
-        b2dbody.body = bodyFactory.makeCirclePolyBody(10,1,1, BodyFactory.STONE, BodyType.DynamicBody,true);
+        b2dbody.body = bodyFactory.makeCirclePolyBody(10,1,1, BodyFactory.STONE, BodyType.DynamicBody,false);
         // set object position (x,y,z) z used to define draw order 0 first drawn
         position.position.set(10,1,0);
         texture.region = tex;
