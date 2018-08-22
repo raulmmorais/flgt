@@ -101,6 +101,10 @@ public class DFUtils {
         return tex;
     }
 
+    public static TextureRegion makeTextureRegion(float f, float g, String hex){
+        return makeTextureRegion((int)f, (int)g, hex);
+    }
+
     public static Texture makeTexture(int width, int height, Color col){
         Texture tex = new Texture(makePixMap(width, height, col));
         disposePmap();

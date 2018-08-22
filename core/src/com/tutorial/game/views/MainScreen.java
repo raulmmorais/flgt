@@ -16,6 +16,7 @@ import com.tutorial.game.LevelFactory;
 import com.tutorial.game.controller.KeyboardController;
 import com.tutorial.game.entity.systems.AnimationSystem;
 import com.tutorial.game.entity.systems.CollisionSystem;
+import com.tutorial.game.entity.systems.EnemySystem;
 import com.tutorial.game.entity.systems.LevelGenerationSystem;
 import com.tutorial.game.entity.systems.PhysicsDebugSystem;
 import com.tutorial.game.entity.systems.PhysicsSystem;
@@ -62,12 +63,10 @@ public class MainScreen implements Screen {
         engine.addSystem(new PhysicsDebugSystem(lvlFactory.world, renderingSystem.getCamera()));
         engine.addSystem(new CollisionSystem());
         engine.addSystem(new PlayerControlSystem(controller));
-
+        engine.addSystem(new EnemySystem());
         player = lvlFactory.createPlayer(atlas.findRegion("player"),cam);
-
         engine.addSystem(new WallSystem(player));
         engine.addSystem(new WaterFloorSystem(player));
-
         engine.addSystem(new LevelGenerationSystem(lvlFactory));
 
         int floorWidth = (int)(40 * RenderingSystem.PPM);

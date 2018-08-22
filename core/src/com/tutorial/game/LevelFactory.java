@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.World;
 import com.tutorial.game.entity.components.B2dBodyComponent;
 import com.tutorial.game.entity.components.CollisionComponent;
+import com.tutorial.game.entity.components.EnemyComponent;
 import com.tutorial.game.entity.components.PlayerComponent;
 import com.tutorial.game.entity.components.StateComponent;
 import com.tutorial.game.entity.components.TextureComponent;
@@ -17,20 +18,25 @@ import com.tutorial.game.entity.components.TransformComponent;
 import com.tutorial.game.entity.components.TypeComponent;
 import com.tutorial.game.entity.components.WallComponent;
 import com.tutorial.game.entity.components.WaterFloorComponent;
+import com.tutorial.game.entity.systems.RenderingSystem;
 import com.tutorial.game.simplexnoise.SimplexNoise;
 
 public class LevelFactory {
 
+    private final TextureRegion platformTex;
     private BodyFactory bodyFactory;
     public World world;
     private PooledEngine engine;
     private SimplexNoise sim;
     public int currentLevel = 0;
     private TextureRegion floorTex;
+    private TextureRegion enemyTex;
 
     public LevelFactory(PooledEngine en, TextureRegion floorTexture){
         engine = en;
-        floorTex = floorTexture;
+        floorTex = DFUtils.makeTextureRegion(40*RenderingSystem.PPM, 0.5f*RenderingSystem.PPM, "111111FF");
+        enemyTex = DFUtils.makeTextureRegion(1*RenderingSystem.PPM, 1*RenderingSystem.PPM, "331111FF");
+        platformTex = DFUtils.makeTextureRegion(2*RenderingSystem.PPM, 0.1f*RenderingSystem.PPM, "221122FF");
         world = new World(new Vector2(0,-10f), true);
         world.setContactListener(new B2dContactListener());
         bodyFactory = BodyFactory.getInstance(world);
@@ -55,12 +61,18 @@ public class LevelFactory {
                     Gdx.app.log("spring", "created");
                     createBouncyPlatform(noise2 * 25 + 2 ,currentLevel * 2);
                 }
+                if (noise7 > 0.5f){
+                    createEnemy(enemyTex, noise2 * 25 + 2 ,currentLevel * 2 + 1);
+                }
             }
             if(noise3 > 0.2f){
                 createPlatform(noise4 * 25 +2, currentLevel * 2);
                 if (noise6 > 0.2f){
                     Gdx.app.log("spring", "created");
                     createBouncyPlatform(noise4 * 25 + 2 ,currentLevel * 2);
+                }
+                if (noise8 > 0.5f){
+                    createEnemy(enemyTex, noise4 * 25 + 2 ,currentLevel * 2 + 1);
                 }
             }
             currentLevel++;
@@ -72,7 +84,7 @@ public class LevelFactory {
         B2dBodyComponent b2dbody = engine.createComponent(B2dBodyComponent.class);
         b2dbody.body = bodyFactory.makeBoxPolyBody(x, y, 1.5f, 0.2f, BodyFactory.STONE, BodyType.StaticBody);
         TextureComponent texture = engine.createComponent(TextureComponent.class);
-        texture.region = floorTex;
+        texture.region = platformTex;
         TypeComponent type = engine.createComponent(TypeComponent.class);
         type.type = TypeComponent.SCENERY;
         b2dbody.body.setUserData(entity);
@@ -202,6 +214,33 @@ public class LevelFactory {
         entity.add(texture);
         entity.add(type);
         entity.add(waterFloor);
+
+        b2dBody.body.setUserData(entity);
+
+        engine.addEntity(entity);
+
+        return entity;
+    }
+
+    public Entity createEnemy(TextureRegion tex, float x, float y){
+        Entity entity = engine.createEntity();
+        B2dBodyComponent b2dBody = engine.createComponent(B2dBodyComponent.class);
+        TransformComponent position = engine.createComponent(TransformComponent.class);
+        TextureComponent texture = engine.createComponent(TextureComponent.class);
+        TypeComponent type = engine.createComponent(TypeComponent.class);
+        EnemyComponent enemy = engine.createComponent(EnemyComponent.class);
+
+        b2dBody.body = bodyFactory.makeCirclePolyBody(x, y, 1, BodyFactory.STONE, BodyType.KinematicBody, true);
+        position.position.set(x, y, 0);
+        texture.region = tex;
+        enemy.xPosCenter = x;
+        type.type = TypeComponent.ENEMY;
+
+        entity.add(b2dBody);
+        entity.add(position);
+        entity.add(texture);
+        entity.add(type);
+        entity.add(enemy);
 
         b2dBody.body.setUserData(entity);
 
