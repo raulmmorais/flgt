@@ -14,6 +14,7 @@ import com.tutorial.game.entity.components.StateComponent;
 import com.tutorial.game.entity.components.TextureComponent;
 import com.tutorial.game.entity.components.TransformComponent;
 import com.tutorial.game.entity.components.TypeComponent;
+import com.tutorial.game.entity.components.WallComponent;
 import com.tutorial.game.entity.components.WaterFloorComponent;
 import com.tutorial.game.simplexnoise.SimplexNoise;
 
@@ -50,13 +51,13 @@ public class LevelFactory {
             if(noise1 > 0.2f){
                 createPlatform(noise2 * 25 +2 ,currentLevel * 2);
                 if (noise5 > 0.5f){
-                    createBouncyPlatform(noise2 * 25 +2 ,currentLevel * 2);
+                    createBouncyPlatform(noise2 * 25 + 2 ,currentLevel * 2);
                 }
             }
             if(noise3 > 0.2f){
                 createPlatform(noise4 * 25 +2, currentLevel * 2);
                 if (noise6 > 0.4f){
-                    createBouncyPlatform(noise4 * 25 +2 ,currentLevel * 2);
+                    createBouncyPlatform(noise4 * 25 + 2 ,currentLevel * 2);
                 }
             }
             currentLevel++;
@@ -78,20 +79,45 @@ public class LevelFactory {
         engine.addEntity(entity);
     }
 
-    public void createFloor(TextureRegion tex){
+    public Entity createBouncyPlatform(float x, float y){
         Entity entity = engine.createEntity();
         B2dBodyComponent b2dbody = engine.createComponent(B2dBodyComponent.class);
-        b2dbody.body = bodyFactory.makeBoxPolyBody(0, 0, 100, 0.2f, BodyFactory.STONE, BodyType.StaticBody);
+        b2dbody.body = bodyFactory.makeBoxPolyBody(x, y, 0.5f, 0.5f, BodyFactory.STONE, BodyType.StaticBody);
+        bodyFactory.makeAllFixturesSensors(b2dbody.body);
+
         TextureComponent texture = engine.createComponent(TextureComponent.class);
-        texture.region = tex;
+        texture.region = floorTex;
+
         TypeComponent type = engine.createComponent(TypeComponent.class);
-        type.type = TypeComponent.SCENERY;
+        type.type = TypeComponent.SPRING;
 
         b2dbody.body.setUserData(entity);
-
         entity.add(b2dbody);
         entity.add(texture);
         entity.add(type);
+        engine.addEntity(entity);
+
+        return entity;
+    }
+
+    public void createFloor(TextureRegion tex){
+        Entity entity = engine.createEntity();
+        B2dBodyComponent b2dbody = engine.createComponent(B2dBodyComponent.class);
+        TransformComponent position = engine.createComponent(TransformComponent.class);
+        TextureComponent texture = engine.createComponent(TextureComponent.class);
+        TypeComponent type = engine.createComponent(TypeComponent.class);
+
+        position.position.set(20, 0, 0);
+        texture.region = tex;
+        type.type = TypeComponent.SCENERY;
+        b2dbody.body = bodyFactory.makeBoxPolyBody(20, 0, 40, 0.5f, BodyFactory.STONE, BodyType.StaticBody);
+
+        entity.add(b2dbody);
+        entity.add(texture);
+        entity.add(position);
+        entity.add(type);
+
+        b2dbody.body.setUserData(entity);
 
         engine.addEntity(entity);
     }
@@ -129,25 +155,30 @@ public class LevelFactory {
         return entity;
     }
 
-    public Entity createBouncyPlatform(float x, float y){
-        Entity entity = engine.createEntity();
-        B2dBodyComponent b2dbody = engine.createComponent(B2dBodyComponent.class);
-        b2dbody.body = bodyFactory.makeBoxPolyBody(x, y, 5f, 0.5f, BodyFactory.STONE, BodyType.StaticBody);
-        bodyFactory.makeAllFixturesSensors(b2dbody.body);
+    public void createWalls(TextureRegion tex) {
+        for (int i = 0; i<2; i++){
+            Entity entity = engine.createEntity();
+            B2dBodyComponent b2dbody = engine.createComponent(B2dBodyComponent.class);
+            TransformComponent position = engine.createComponent(TransformComponent.class);
+            TextureComponent texture = engine.createComponent(TextureComponent.class);
+            TypeComponent type = engine.createComponent(TypeComponent.class);
+            WallComponent wallComp = engine.createComponent(WallComponent.class);
 
-        TextureComponent texture = engine.createComponent(TextureComponent.class);
-        texture.region = floorTex;
+            //make wall
+            b2dbody.body = bodyFactory.makeBoxPolyBody(0 + (i*40), 30, 1f, 60f, BodyFactory.STONE, BodyType.KinematicBody, true);
+            position.position.set(0+(i*40), 30, 0);
+            texture.region = tex;
+            type.type = TypeComponent.SCENERY;
 
-        TypeComponent type = engine.createComponent(TypeComponent.class);
-        type.type = TypeComponent.SPRING;
+            entity.add(b2dbody);
+            entity.add(position);
+            entity.add(texture);
+            entity.add(type);
+            entity.add(wallComp);
+            b2dbody.body.setUserData(entity);
 
-        b2dbody.body.setUserData(entity);
-        entity.add(b2dbody);
-        entity.add(texture);
-        entity.add(type);
-        engine.addEntity(entity);
-
-        return entity;
+            engine.addEntity(entity);
+        }
     }
 
     public Entity createWaterFloor(TextureRegion tex){
@@ -174,23 +205,5 @@ public class LevelFactory {
         engine.addEntity(entity);
 
         return entity;
-    }
-
-    public void createWalls(TextureRegion tex) {
-        Entity entity = engine.createEntity();
-        B2dBodyComponent b2dbody = engine.createComponent(B2dBodyComponent.class);
-        b2dbody.body = bodyFactory.makeBoxPolyBody(0, 0, 0.2f, 60f, BodyFactory.STONE, BodyType.StaticBody);
-        TextureComponent texture = engine.createComponent(TextureComponent.class);
-        texture.region = tex;
-        TypeComponent type = engine.createComponent(TypeComponent.class);
-        type.type = TypeComponent.SCENERY;
-
-        b2dbody.body.setUserData(entity);
-
-        entity.add(b2dbody);
-        entity.add(texture);
-        entity.add(type);
-
-        engine.addEntity(entity);
     }
 }
