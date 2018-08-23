@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.World;
 import com.tutorial.game.entity.components.B2dBodyComponent;
+import com.tutorial.game.entity.components.BulletComponent;
 import com.tutorial.game.entity.components.CollisionComponent;
 import com.tutorial.game.entity.components.EnemyComponent;
 import com.tutorial.game.entity.components.PlayerComponent;
@@ -31,12 +32,14 @@ public class LevelFactory {
     public int currentLevel = 0;
     private TextureRegion floorTex;
     private TextureRegion enemyTex;
+    private TextureRegion bulletTex;
 
     public LevelFactory(PooledEngine en, TextureRegion floorTexture){
         engine = en;
         floorTex = DFUtils.makeTextureRegion(40*RenderingSystem.PPM, 0.5f*RenderingSystem.PPM, "111111FF");
         enemyTex = DFUtils.makeTextureRegion(1*RenderingSystem.PPM, 1*RenderingSystem.PPM, "331111FF");
         platformTex = DFUtils.makeTextureRegion(2*RenderingSystem.PPM, 0.1f*RenderingSystem.PPM, "221122FF");
+        bulletTex = DFUtils.makeTextureRegion(0.5f*RenderingSystem.PPM, 0.5f*RenderingSystem.PPM, "661122FF");
         world = new World(new Vector2(0,-10f), true);
         world.setContactListener(new B2dContactListener());
         bodyFactory = BodyFactory.getInstance(world);
@@ -229,6 +232,7 @@ public class LevelFactory {
         TextureComponent texture = engine.createComponent(TextureComponent.class);
         TypeComponent type = engine.createComponent(TypeComponent.class);
         EnemyComponent enemy = engine.createComponent(EnemyComponent.class);
+        CollisionComponent colComp = engine.createComponent(CollisionComponent.class);
 
         b2dBody.body = bodyFactory.makeCirclePolyBody(x, y, 1, BodyFactory.STONE, BodyType.KinematicBody, true);
         position.position.set(x, y, 0);
@@ -236,11 +240,43 @@ public class LevelFactory {
         enemy.xPosCenter = x;
         type.type = TypeComponent.ENEMY;
 
+        entity.add(colComp);
         entity.add(b2dBody);
         entity.add(position);
         entity.add(texture);
         entity.add(type);
         entity.add(enemy);
+
+        b2dBody.body.setUserData(entity);
+
+        engine.addEntity(entity);
+
+        return entity;
+    }
+    public Entity createBullet(float x, float y, float velX, float velY){
+        Entity entity = engine.createEntity();
+        B2dBodyComponent b2dBody = engine.createComponent(B2dBodyComponent.class);
+        TransformComponent position = engine.createComponent(TransformComponent.class);
+        TextureComponent texture = engine.createComponent(TextureComponent.class);
+        TypeComponent type = engine.createComponent(TypeComponent.class);
+        BulletComponent bul = engine.createComponent(BulletComponent.class);
+        CollisionComponent colComp = engine.createComponent(CollisionComponent.class);
+
+        b2dBody.body = bodyFactory.makeCirclePolyBody(x, y, 0.5f, BodyFactory.STONE, BodyType.DynamicBody, true);
+        b2dBody.body.setBullet(true);// increase physics computation to limit body travelling through other objects
+        bodyFactory.makeAllFixturesSensors(b2dBody.body);// make bullets sensors so they don't move player
+        position.position.set(x, y, 0);
+        texture.region = bulletTex;
+        type.type = TypeComponent.BULLET;
+        bul.xVel = velX;
+        bul.yVel = velY;
+
+        entity.add(bul);
+        entity.add(colComp);
+        entity.add(b2dBody);
+        entity.add(position);
+        entity.add(texture);
+        entity.add(type);
 
         b2dBody.body.setUserData(entity);
 
