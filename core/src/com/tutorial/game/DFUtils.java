@@ -56,7 +56,7 @@ public class DFUtils {
      * Generate a random name using fname and lname files in assets
      * @return a random name
      */
-    /*public static String generateRandomName(){
+    public static String generateRandomName(){
         String name = "";
         if (fnames == null){
             FileHandle fnfile = Gdx.files.internal("fname.txt");
@@ -72,7 +72,7 @@ public class DFUtils {
         name += "_" + lnames[lni].trim();
 
         return name;
-    }*/
+    }
 
     /**
      * Quick access to console logging
@@ -116,6 +116,20 @@ public class DFUtils {
         pmap.setColor(fill);
         pmap.fill();
         return pmap;
+    }
+
+    public static TextureRegion[] spritesheetToFrames(TextureRegion region, int FRAME_COLLS, int FRAME_ROWS){
+        TextureRegion[][] tmp = region.split(region.getRegionWidth() / FRAME_COLLS, region.getRegionHeight() / FRAME_ROWS);
+
+        TextureRegion[] frames = new TextureRegion[FRAME_COLLS * FRAME_ROWS];
+        int index = 0;
+        for (int i = 0; i < FRAME_ROWS; i ++){
+            for (int j = 0; j < FRAME_COLLS; j++){
+                frames[index ++] = tmp[i][j];
+            }
+        }
+
+        return frames;
     }
 
     private static void disposePmap() {

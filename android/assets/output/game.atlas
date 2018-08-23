@@ -3,6 +3,13 @@ game.png
 format: RGBA8888
 filter: MipMapLinearLinear,MipMapLinearLinear
 repeat: none
+ARW 2D Flame Sprite Sheet 
+  rotate: false
+  xy: 1, 35
+  size: 168, 24
+  orig: 168, 24
+  offset: 0, 0
+  index: -1
 enemy
   rotate: false
   xy: 1, 1

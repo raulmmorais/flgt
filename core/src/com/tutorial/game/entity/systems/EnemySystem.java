@@ -27,7 +27,7 @@ public class EnemySystem extends IteratingSystem {
         // get distance of enemy from its original start position (pad center)
         float distFromOrig = Math.abs(enemyCom.xPosCenter - bodyCom.body.getPosition().x);
         // if distance > 1 swap direction
-        enemyCom.isGoingLeft = (distFromOrig > 1)? !enemyCom.isGoingLeft:enemyCom.isGoingLeft;
+        enemyCom.isGoingLeft = (distFromOrig > 1) ? !enemyCom.isGoingLeft:enemyCom.isGoingLeft;
         // set speed base on direction
         float speed = enemyCom.isGoingLeft?-0.01f:0.01f;
 

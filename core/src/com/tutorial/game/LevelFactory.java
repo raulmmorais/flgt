@@ -4,10 +4,14 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.World;
+import com.tutorial.game.entity.components.AnimationComponent;
 import com.tutorial.game.entity.components.B2dBodyComponent;
 import com.tutorial.game.entity.components.BulletComponent;
 import com.tutorial.game.entity.components.CollisionComponent;
@@ -20,6 +24,7 @@ import com.tutorial.game.entity.components.TypeComponent;
 import com.tutorial.game.entity.components.WallComponent;
 import com.tutorial.game.entity.components.WaterFloorComponent;
 import com.tutorial.game.entity.systems.RenderingSystem;
+import com.tutorial.game.simplexnoise.OpenSimplexNoise;
 import com.tutorial.game.simplexnoise.SimplexNoise;
 
 public class LevelFactory {
@@ -28,58 +33,57 @@ public class LevelFactory {
     private BodyFactory bodyFactory;
     public World world;
     private PooledEngine engine;
-    private SimplexNoise sim;
+    //private SimplexNoise sim;
+    private final OpenSimplexNoise openSin;
     public int currentLevel = 0;
     private TextureRegion floorTex;
     private TextureRegion enemyTex;
     private TextureRegion bulletTex;
+    private TextureAtlas atlas;
 
     public LevelFactory(PooledEngine en, TextureRegion floorTexture){
         engine = en;
         floorTex = DFUtils.makeTextureRegion(40*RenderingSystem.PPM, 0.5f*RenderingSystem.PPM, "111111FF");
         enemyTex = DFUtils.makeTextureRegion(1*RenderingSystem.PPM, 1*RenderingSystem.PPM, "331111FF");
         platformTex = DFUtils.makeTextureRegion(2*RenderingSystem.PPM, 0.1f*RenderingSystem.PPM, "221122FF");
-        bulletTex = DFUtils.makeTextureRegion(0.5f*RenderingSystem.PPM, 0.5f*RenderingSystem.PPM, "661122FF");
+        bulletTex = DFUtils.makeTextureRegion(10, 10, "444444FF");
         world = new World(new Vector2(0,-10f), true);
         world.setContactListener(new B2dContactListener());
         bodyFactory = BodyFactory.getInstance(world);
         // create a new SimplexNoise (size,roughness,seed)
-        sim = new SimplexNoise(512, 0.85f, 1);
+        //sim = new SimplexNoise(512, 0.85f, 1);
+
+        openSin = new OpenSimplexNoise(MathUtils.random(2000l));
     }
 
     public void generateLevel(int ylevel){
         while(ylevel > currentLevel){
-            // get noise      sim.getNoise(xpos,ypos,zpos) 3D noise
-            float noise1 = (float)sim.getNoise(1, currentLevel, 0);
-            float noise2 = (float)sim.getNoise(1, currentLevel, 100);
-            float noise3 = (float)sim.getNoise(1, currentLevel, 200);
-            float noise4 = (float)sim.getNoise(1, currentLevel, 300);
-            float noise5 = (float)sim.getNoise(1, currentLevel, 1400);
-            float noise6 = (float)sim.getNoise(1, currentLevel, 2500);
-            float noise7 = (float)sim.getNoise(1, currentLevel, 2700);
-            float noise8 = (float)sim.getNoise(1, currentLevel, 3000);
-            if(noise1 > 0.2f){
-                createPlatform(noise2 * 25 +2 ,currentLevel * 2);
-                if (noise5 > 0.2f){
-                    Gdx.app.log("spring", "created");
-                    createBouncyPlatform(noise2 * 25 + 2 ,currentLevel * 2);
-                }
-                if (noise7 > 0.5f){
-                    createEnemy(enemyTex, noise2 * 25 + 2 ,currentLevel * 2 + 1);
-                }
-            }
-            if(noise3 > 0.2f){
-                createPlatform(noise4 * 25 +2, currentLevel * 2);
-                if (noise6 > 0.2f){
-                    Gdx.app.log("spring", "created");
-                    createBouncyPlatform(noise4 * 25 + 2 ,currentLevel * 2);
-                }
-                if (noise8 > 0.5f){
-                    createEnemy(enemyTex, noise4 * 25 + 2 ,currentLevel * 2 + 1);
-                }
+            int range = 15;
+            for (int i = 1; i < 5; i++){
+                generateSingleColumn(genNForL(i * 1, currentLevel)
+                        ,genNForL(i * 100, currentLevel)
+                        ,genNForL(i * 200, currentLevel)
+                        ,genNForL(i * 300, currentLevel)
+                        ,range, i*10);
             }
             currentLevel++;
         }
+    }
+
+    private void generateSingleColumn(float n1, float n2, float n3, float n4, int range, int offset) {
+        if (n1 > -0.8f){
+            createPlatform(n2 * range + offset, currentLevel*2);
+            if (n3 > 0.3f){
+                createBouncyPlatform(n2 * range + offset, currentLevel*2);
+            }
+            if (n4 > 0.2f){
+                createEnemy(enemyTex, n2 * range + offset, currentLevel*2 + 1);
+            }
+        }
+    }
+
+    private float genNForL(int level, int height) {
+        return (float)openSin.eval(height, level);
     }
 
     public void createPlatform(float x, float y) {
@@ -258,15 +262,21 @@ public class LevelFactory {
         B2dBodyComponent b2dBody = engine.createComponent(B2dBodyComponent.class);
         TransformComponent position = engine.createComponent(TransformComponent.class);
         TextureComponent texture = engine.createComponent(TextureComponent.class);
+        AnimationComponent animCom = engine.createComponent(AnimationComponent.class);
+        StateComponent stateCom = engine.createComponent(StateComponent.class);
         TypeComponent type = engine.createComponent(TypeComponent.class);
-        BulletComponent bul = engine.createComponent(BulletComponent.class);
         CollisionComponent colComp = engine.createComponent(CollisionComponent.class);
+        BulletComponent bul = engine.createComponent(BulletComponent.class);
 
         b2dBody.body = bodyFactory.makeCirclePolyBody(x, y, 0.5f, BodyFactory.STONE, BodyType.DynamicBody, true);
         b2dBody.body.setBullet(true);// increase physics computation to limit body travelling through other objects
         bodyFactory.makeAllFixturesSensors(b2dBody.body);// make bullets sensors so they don't move player
         position.position.set(x, y, 0);
         texture.region = bulletTex;
+        Animation anim = new Animation(0.05f, DFUtils.spritesheetToFrames(atlas.findRegion("FlameSpriteAnimation"), 7, 1));
+        anim.setPlayMode(Animation.PlayMode.LOOP);
+        animCom.animations.put(0, anim);
+
         type.type = TypeComponent.BULLET;
         bul.xVel = velX;
         bul.yVel = velY;
@@ -276,12 +286,13 @@ public class LevelFactory {
         entity.add(b2dBody);
         entity.add(position);
         entity.add(texture);
+        entity.add(animCom);
+        entity.add(stateCom);
         entity.add(type);
 
         b2dBody.body.setUserData(entity);
 
         engine.addEntity(entity);
-
         return entity;
     }
 }
