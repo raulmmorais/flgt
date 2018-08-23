@@ -32,11 +32,12 @@ public class BulletSystem extends IteratingSystem {
         float bx = b2body.body.getPosition().x;
         float by = b2body.body.getPosition().y;
 
-        if (bx - px > 20 || by - py > 20){
+        if(bx - px > 20 || by - py > 20){
             bullet.isDead = true;
         }
 
         if (bullet.isDead){
+            System.out.println("Bullet died");
             b2body.isDead = true;
         }
 
